@@ -19,9 +19,14 @@ export function ResultCard({ link }: ResultCardProps) {
             Short URL
           </p>
           <div className="flex items-center gap-2">
-            <code className="flex-1 rounded-md bg-surface px-3 py-2 text-sm font-mono text-navy font-medium truncate">
-              {link.short_url}
-            </code>
+            <a
+              href={link.short_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex-1 rounded-md bg-surface px-3 py-2 text-sm font-mono text-navy font-medium truncate hover:underline"
+            >
+              snip/{link.code}
+            </a>
             <CopyButton text={link.short_url} />
           </div>
         </div>

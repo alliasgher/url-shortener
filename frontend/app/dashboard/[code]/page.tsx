@@ -76,9 +76,14 @@ export default function DashboardPage({ params }: { params: Promise<{ code: stri
             <div className="flex flex-col gap-3 rounded-lg border border-border bg-card p-4 sm:flex-row sm:items-center sm:justify-between">
               <div className="min-w-0">
                 <div className="flex items-center gap-2 mb-1">
-                  <code className="text-sm font-mono font-medium text-navy truncate">
-                    {shortUrl}
-                  </code>
+                  <a
+                    href={shortUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm font-mono font-medium text-navy truncate hover:underline"
+                  >
+                    snip/{code}
+                  </a>
                   <CopyButton text={shortUrl} />
                 </div>
                 <p className="text-xs text-text-muted truncate">
