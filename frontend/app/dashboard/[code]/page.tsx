@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState, use } from "react";
+import { useEffect, useState, useCallback, use } from "react";
 import Link from "next/link";
-import { ArrowLeft, ExternalLink } from "lucide-react";
+import { ArrowLeft, ExternalLink, RefreshCw } from "lucide-react";
 import { Header } from "@/components/header";
 import { StatsCards } from "@/components/stats-cards";
 import { ClicksChart } from "@/components/clicks-chart";
@@ -21,12 +21,21 @@ export default function DashboardPage({ params }: { params: Promise<{ code: stri
   const { code } = use(params);
   const [data, setData] = useState<AnalyticsResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [refreshing, setRefreshing] = useState(false);
 
-  useEffect(() => {
+  const fetchData = useCallback(() => {
+    setRefreshing(true);
     getAnalytics(code)
       .then(setData)
-      .catch((err) => setError(err.message));
+      .catch((err) => setError(err.message))
+      .finally(() => setRefreshing(false));
   }, [code]);
+
+  useEffect(() => {
+    fetchData();
+    const interval = setInterval(fetchData, 10000);
+    return () => clearInterval(interval);
+  }, [fetchData]);
 
   const shortUrl = `${API_URL}/${code}`;
 
@@ -34,13 +43,23 @@ export default function DashboardPage({ params }: { params: Promise<{ code: stri
     <>
       <Header />
       <main className="mx-auto w-full max-w-5xl px-4 py-8">
-        <Link
-          href="/"
-          className="mb-6 inline-flex items-center gap-1.5 text-sm text-text-muted hover:text-deep transition-colors"
-        >
-          <ArrowLeft className="h-3.5 w-3.5" />
-          Back to home
-        </Link>
+        <div className="mb-6 flex items-center justify-between">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-1.5 text-sm text-text-muted hover:text-deep transition-colors"
+          >
+            <ArrowLeft className="h-3.5 w-3.5" />
+            Back to home
+          </Link>
+          <button
+            onClick={fetchData}
+            disabled={refreshing}
+            className="inline-flex items-center gap-1.5 text-xs text-text-muted hover:text-deep transition-colors disabled:opacity-50"
+          >
+            <RefreshCw className={`h-3.5 w-3.5 ${refreshing ? "animate-spin" : ""}`} />
+            {refreshing ? "Refreshing..." : "Refresh"}
+          </button>
+        </div>
 
         {error ? (
           <div className="rounded-lg border border-coral/30 bg-coral/5 p-8 text-center">
