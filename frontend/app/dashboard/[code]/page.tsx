@@ -80,7 +80,7 @@ export default function DashboardPage({ params }: { params: Promise<{ code: stri
                     href={shortUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-sm font-mono font-medium text-navy truncate hover:underline"
+                    className="text-sm font-mono font-medium text-navy dark:text-mint truncate hover:underline"
                   >
                     snip/{code}
                   </a>

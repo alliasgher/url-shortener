@@ -20,7 +20,7 @@ export function RecentClicksTable({ clicks }: RecentClicksTableProps) {
   return (
     <Card className="border-border bg-card">
       <CardContent className="pt-6">
-        <h3 className="mb-4 font-heading text-sm font-semibold text-deep">
+        <h3 className="mb-4 font-heading text-sm font-semibold text-deep dark:text-white">
           Recent Clicks
         </h3>
         {clicks.length === 0 ? (

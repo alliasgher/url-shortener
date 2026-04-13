@@ -9,16 +9,20 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { Card, CardContent } from "@/components/ui/card";
+import { useDarkMode, chartColors } from "@/lib/use-dark-mode";
 
 interface GeoChartProps {
   data: { country: string; clicks: number }[];
 }
 
 export function GeoChart({ data }: GeoChartProps) {
+  const dark = useDarkMode();
+  const c = dark ? chartColors.dark : chartColors.light;
+
   return (
     <Card className="border-border bg-card">
       <CardContent className="pt-6">
-        <h3 className="mb-4 font-heading text-sm font-semibold text-deep">
+        <h3 className="mb-4 font-heading text-sm font-semibold text-deep dark:text-white">
           Top Countries
         </h3>
         {data.length === 0 ? (
@@ -31,7 +35,7 @@ export function GeoChart({ data }: GeoChartProps) {
               <XAxis
                 type="number"
                 allowDecimals={false}
-                tick={{ fontSize: 11, fill: "#8896A6" }}
+                tick={{ fontSize: 11, fill: c.tick }}
                 axisLine={false}
                 tickLine={false}
               />
@@ -39,19 +43,20 @@ export function GeoChart({ data }: GeoChartProps) {
                 type="category"
                 dataKey="country"
                 width={40}
-                tick={{ fontSize: 12, fill: "#0D1B2A", fontWeight: 500 }}
+                tick={{ fontSize: 12, fill: c.text, fontWeight: 500 }}
                 axisLine={false}
                 tickLine={false}
               />
               <Tooltip
                 contentStyle={{
-                  background: "#FFFFFF",
-                  border: "1px solid #E3E8EF",
+                  background: c.tooltipBg,
+                  border: `1px solid ${c.tooltipBorder}`,
                   borderRadius: 8,
                   fontSize: 12,
+                  color: c.text,
                 }}
               />
-              <Bar dataKey="clicks" fill="#1E3A5F" radius={[0, 4, 4, 0]} />
+              <Bar dataKey="clicks" fill={dark ? "#00C9A7" : "#1E3A5F"} radius={[0, 4, 4, 0]} />
             </BarChart>
           </ResponsiveContainer>
         )}

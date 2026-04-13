@@ -55,7 +55,7 @@ export function StatsCards({ data }: StatsCardsProps) {
             </div>
             <div>
               <p className="text-xs font-medium text-text-muted">{stat.label}</p>
-              <p className="text-lg font-heading font-bold text-deep">{stat.value}</p>
+              <p className="text-lg font-heading font-bold text-deep dark:text-white">{stat.value}</p>
               {stat.sub && (
                 <p className="text-xs text-text-muted">{stat.sub}</p>
               )}

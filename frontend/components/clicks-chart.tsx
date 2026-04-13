@@ -10,19 +10,21 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { Card, CardContent } from "@/components/ui/card";
+import { useDarkMode, chartColors } from "@/lib/use-dark-mode";
 
 interface ClicksChartProps {
   data: { date: string; clicks: number }[];
 }
 
 export function ClicksChart({ data }: ClicksChartProps) {
-  // Fill missing dates in the last 30 days
+  const dark = useDarkMode();
+  const c = dark ? chartColors.dark : chartColors.light;
   const filled = fillDates(data);
 
   return (
     <Card className="border-border bg-card">
       <CardContent className="pt-6">
-        <h3 className="mb-4 font-heading text-sm font-semibold text-deep">
+        <h3 className="mb-4 font-heading text-sm font-semibold text-deep dark:text-white">
           Clicks Over Time
         </h3>
         {filled.length === 0 ? (
@@ -38,29 +40,30 @@ export function ClicksChart({ data }: ClicksChartProps) {
                   <stop offset="95%" stopColor="#00C9A7" stopOpacity={0} />
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="#E3E8EF" />
+              <CartesianGrid strokeDasharray="3 3" stroke={c.grid} />
               <XAxis
                 dataKey="date"
                 tickFormatter={(d) => {
                   const date = new Date(d);
                   return `${date.getMonth() + 1}/${date.getDate()}`;
                 }}
-                tick={{ fontSize: 11, fill: "#8896A6" }}
-                axisLine={{ stroke: "#E3E8EF" }}
+                tick={{ fontSize: 11, fill: c.tick }}
+                axisLine={{ stroke: c.grid }}
                 tickLine={false}
               />
               <YAxis
                 allowDecimals={false}
-                tick={{ fontSize: 11, fill: "#8896A6" }}
+                tick={{ fontSize: 11, fill: c.tick }}
                 axisLine={false}
                 tickLine={false}
               />
               <Tooltip
                 contentStyle={{
-                  background: "#FFFFFF",
-                  border: "1px solid #E3E8EF",
+                  background: c.tooltipBg,
+                  border: `1px solid ${c.tooltipBorder}`,
                   borderRadius: 8,
                   fontSize: 12,
+                  color: c.text,
                 }}
                 labelFormatter={(d) => new Date(d).toLocaleDateString()}
               />

@@ -3,6 +3,7 @@
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from "recharts";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useDarkMode, chartColors } from "@/lib/use-dark-mode";
 
 interface DeviceChartProps {
   browsers: { browser: string; clicks: number }[];
@@ -10,17 +11,17 @@ interface DeviceChartProps {
   devices: { device_type: string; clicks: number }[];
 }
 
-const COLORS = ["#1E3A5F", "#00C9A7", "#FF6B4A", "#2A4F7A", "#0D8B7D", "#8896A6"];
+const COLORS = ["#00C9A7", "#1E3A5F", "#FF6B4A", "#2A4F7A", "#0D8B7D", "#8896A6"];
 
 export function DeviceChart({ browsers, os, devices }: DeviceChartProps) {
   return (
     <Card className="border-border bg-card">
       <CardContent className="pt-6">
-        <h3 className="mb-4 font-heading text-sm font-semibold text-deep">
+        <h3 className="mb-4 font-heading text-sm font-semibold text-deep dark:text-white">
           Device Breakdown
         </h3>
         <Tabs defaultValue="browser">
-          <TabsList className="mb-4 bg-surface">
+          <TabsList className="mb-4 bg-surface dark:bg-muted">
             <TabsTrigger value="browser" className="text-xs data-[state=active]:bg-navy data-[state=active]:text-white">
               Browser
             </TabsTrigger>
@@ -47,6 +48,9 @@ export function DeviceChart({ browsers, os, devices }: DeviceChartProps) {
 }
 
 function DonutChart({ data }: { data: { name: string; value: number }[] }) {
+  const dark = useDarkMode();
+  const c = dark ? chartColors.dark : chartColors.light;
+
   if (data.length === 0) {
     return (
       <div className="flex h-[220px] items-center justify-center text-sm text-text-muted">
@@ -73,14 +77,15 @@ function DonutChart({ data }: { data: { name: string; value: number }[] }) {
         </Pie>
         <Tooltip
           contentStyle={{
-            background: "#FFFFFF",
-            border: "1px solid #E3E8EF",
+            background: c.tooltipBg,
+            border: `1px solid ${c.tooltipBorder}`,
             borderRadius: 8,
             fontSize: 12,
+            color: c.text,
           }}
         />
         <Legend
-          wrapperStyle={{ fontSize: 11, color: "#8896A6" }}
+          wrapperStyle={{ fontSize: 11, color: c.tick }}
           iconType="circle"
           iconSize={8}
         />
