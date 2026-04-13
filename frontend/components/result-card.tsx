@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ExternalLink, BarChart3 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { CopyButton } from "@/components/copy-button";
+import { QRCodeDisplay } from "@/components/qr-code";
 import type { LinkResponse } from "@/lib/types";
 
 interface ResultCardProps {
@@ -38,7 +39,7 @@ export function ResultCard({ link }: ResultCardProps) {
           <p className="text-sm text-text-secondary truncate">{link.original_url}</p>
         </div>
 
-        <div className="flex items-center gap-3 pt-1">
+        <div className="flex items-center gap-3 pt-1 flex-wrap">
           <Link
             href={`/dashboard/${link.code}`}
             className="inline-flex items-center gap-1.5 text-sm font-medium text-mint hover:text-mint-dark transition-colors"
@@ -55,6 +56,7 @@ export function ResultCard({ link }: ResultCardProps) {
             <ExternalLink className="h-3.5 w-3.5" />
             Test Link
           </a>
+          <QRCodeDisplay url={link.short_url} code={link.code} />
         </div>
       </CardContent>
     </Card>
