@@ -82,7 +82,7 @@ export function ClicksChart({ data }: ClicksChartProps) {
 function fillDates(data: { date: string; clicks: number }[]): { date: string; clicks: number }[] {
   if (data.length === 0) return [];
 
-  const map = new Map(data.map((d) => [d.date, d.clicks]));
+  const map = new Map(data.map((d) => [d.date.split("T")[0], d.clicks]));
   const end = new Date();
   const start = new Date();
   start.setDate(start.getDate() - 29);
