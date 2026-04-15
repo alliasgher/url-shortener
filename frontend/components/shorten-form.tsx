@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { ArrowRight, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,6 +15,18 @@ export function ShortenForm({ onResult }: ShortenFormProps) {
   const [url, setUrl] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [slowWarning, setSlowWarning] = useState(false);
+  const timerRef = useRef<ReturnType<typeof setTimeout>>();
+
+  useEffect(() => {
+    if (loading) {
+      timerRef.current = setTimeout(() => setSlowWarning(true), 3000);
+    } else {
+      setSlowWarning(false);
+      if (timerRef.current) clearTimeout(timerRef.current);
+    }
+    return () => { if (timerRef.current) clearTimeout(timerRef.current); };
+  }, [loading]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -62,6 +74,11 @@ export function ShortenForm({ onResult }: ShortenFormProps) {
       </div>
       {error && (
         <p className="text-sm text-coral">{error}</p>
+      )}
+      {slowWarning && (
+        <p className="text-xs text-text-muted animate-in fade-in">
+          Server is waking up from sleep — free tier cold start. This takes ~30 seconds on the first request.
+        </p>
       )}
     </form>
   );

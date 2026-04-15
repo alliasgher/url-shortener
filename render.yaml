@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: snip-backend
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: .
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: FRONTEND_URL
+        value: https://url-shortener-snip.vercel.app
+      - key: BASE_URL
+        fromService:
+          type: web
+          name: snip-backend
+          property: host
+      - key: PORT
+        value: 3001
+    healthCheckPath: /api/health
