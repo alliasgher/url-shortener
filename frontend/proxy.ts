@@ -3,11 +3,12 @@ import { neon } from "@neondatabase/serverless";
 import { UAParser } from "ua-parser-js";
 
 /**
- * Short-link redirects run at the edge, close to the visitor, because the
- * redirect *is* the product. Two consequences shape this file:
+ * Short-link redirects are handled here, before the request reaches the app,
+ * because the redirect *is* the product. Two things shape this file:
  *
- *  - The edge runtime has no TCP, so `pg` cannot be used here. Neon's HTTP
- *    driver can, which is why this is the one place using it.
+ *  - It uses Neon's HTTP driver rather than `pg`. Proxy may run outside the
+ *    app's region on a runtime without TCP, and stateless HTTP queries avoid
+ *    holding a connection pool open per invocation either way.
  *  - The click insert must not delay the redirect, but must still finish.
  *    `event.waitUntil` keeps the invocation alive after the response is sent —
  *    the fire-and-forget the Fastify version used would simply be dropped.
@@ -55,7 +56,7 @@ async function recordClick(req: NextRequest, linkId: number) {
   `;
 }
 
-export async function middleware(req: NextRequest, event: NextFetchEvent) {
+export async function proxy(req: NextRequest, event: NextFetchEvent) {
   const { pathname } = req.nextUrl;
 
   // The matcher lets "/" through; it is the homepage, not a short code.
