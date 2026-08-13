@@ -1,9 +1,8 @@
 import type { LinkResponse, AnalyticsResponse } from "./types";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
-
+// The API is served by this same Next app under /api — requests are same-origin.
 export async function shortenUrl(url: string): Promise<LinkResponse> {
-  const res = await fetch(`${API_URL}/api/links`, {
+  const res = await fetch(`/api/links`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ url }),
@@ -16,7 +15,7 @@ export async function shortenUrl(url: string): Promise<LinkResponse> {
 }
 
 export async function getAnalytics(code: string): Promise<AnalyticsResponse> {
-  const res = await fetch(`${API_URL}/api/analytics/${code}`);
+  const res = await fetch(`/api/analytics/${code}`);
   if (!res.ok) {
     if (res.status === 404) throw new Error("Link not found");
     throw new Error("Failed to load analytics");
@@ -25,7 +24,7 @@ export async function getAnalytics(code: string): Promise<AnalyticsResponse> {
 }
 
 export async function getLink(code: string): Promise<{ code: string; original_url: string; created_at: string }> {
-  const res = await fetch(`${API_URL}/api/links/${code}`);
+  const res = await fetch(`/api/links/${code}`);
   if (!res.ok) {
     if (res.status === 404) throw new Error("Link not found");
     throw new Error("Failed to load link");
